@@ -1,15 +1,12 @@
-// Import module yang diperlukan
-const express = require("express");
-const cors = require("cors");
-const app = express();
+require("dotenv").config();
 
-// Middleware CORS untuk mengatasi masalah CORS
+const express = require("express");
+const app = express();
+const postsRoutes = require("./routes/posts.router");
+const cors = require("cors");
+
 app.use(cors());
 
-// Import rute postsRoutes
-const postsRoutes = require("./routes/postsRoutes");
-
-// Menggunakan rute-rute posts
 app.use("/api", postsRoutes);
 
 // Port yang digunakan untuk aplikasi
