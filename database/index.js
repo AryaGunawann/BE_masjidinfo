@@ -20,4 +20,9 @@ const dbConfig = {
 
 const pool = mysql.createPool(dbConfig);
 
+// Handle aplikasi ditutup
+process.on("exit", () => {
+  pool.end();
+});
+
 module.exports = pool;
