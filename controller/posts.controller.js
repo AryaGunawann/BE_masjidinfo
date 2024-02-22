@@ -131,7 +131,9 @@ const masjidController = {
     const { q } = req.query;
 
     if (!q) {
-      res.status(400).json(ApiResponse.error("Parameter pencarian (q) tidak ditemukan"));
+      res
+        .status(400)
+        .json(ApiResponse.error("Parameter pencarian (q) tidak ditemukan"));
       return;
     }
 
@@ -194,7 +196,9 @@ const masjidController = {
         );
     } catch (error) {
       console.log(error);
-      res.status(500).json(ApiResponse.error("Gagal melakukan pencarian data masjid"));
+      res
+        .status(500)
+        .json(ApiResponse.error("Gagal melakukan pencarian data masjid"));
     }
   },
 };
