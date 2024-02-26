@@ -25,18 +25,25 @@ function buildResultStructure(acc, row) {
     });
   } else {
     // If sejarah for the specific bagian already exists, don't update it
-    const sejarahIndex = acc[masjidIndex].sejarah.findIndex(
+    const existingSejarah = acc[masjidIndex].sejarah.find(
       (s) => s.bagian === row.bagian
     );
 
-    if (sejarahIndex === -1) {
-      // If sejarah doesn't exist, add it at the beginning of the array
-      acc[masjidIndex].sejarah.unshift({
+    if (!existingSejarah) {
+      // If sejarah doesn't exist, add it at the end of the array
+      acc[masjidIndex].sejarah.push({
         bagian: row.bagian,
         keterangan: row.sejarah,
         fotoUrl: row.foto_sejarah,
       });
     }
+    
+    // Sort sejarah array based on bagian
+    acc[masjidIndex].sejarah.sort((a, b) => {
+      const bagianA = a.bagian.toLowerCase();
+      const bagianB = b.bagian.toLowerCase();
+      return bagianA.localeCompare(bagianB);
+    });
 
     const fotoMasjidIndex = acc[masjidIndex].foto_masjid.findIndex(
       (f) => f.url === row.foto_masjid
