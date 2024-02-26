@@ -24,11 +24,13 @@ function buildResultStructure(acc, row) {
         : [],
     });
   } else {
+    // If sejarah for the specific bagian already exists, don't update it
     const sejarahIndex = acc[masjidIndex].sejarah.findIndex(
       (s) => s.bagian === row.bagian
     );
 
     if (sejarahIndex === -1) {
+      // If sejarah doesn't exist, add it at the beginning of the array
       acc[masjidIndex].sejarah.unshift({
         bagian: row.bagian,
         keterangan: row.sejarah,
@@ -196,10 +198,6 @@ const masjidController = {
         status: "success",
         data: rows.reduce(buildResultStructure, []),
       };
-
-      formattedResult.data.forEach((masjid) => {
-        masjid.sejarah.sort((a, b) => b.bagian - a.bagian);
-      });
 
       res
         .status(200)
