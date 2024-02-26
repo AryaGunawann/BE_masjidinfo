@@ -1,6 +1,56 @@
 const pool = require("../database/index");
 const ApiResponse = require("../response");
 
+// Function to handle common logic for building result structure
+function buildResultStructure(acc, row) {
+  const masjidIndex = acc.findIndex((m) => m.id === row.id);
+
+  if (masjidIndex === -1) {
+    acc.push({
+      id: row.id,
+      nama_masjid: row.nama_masjid,
+      lokasi: row.lokasi,
+      negara: row.negara,
+      tanggal_dibuat: row.tanggal_dibuat,
+      sejarah: [
+        {
+          bagian: row.bagian,
+          keterangan: row.sejarah,
+          fotoUrl: row.foto_sejarah,
+        },
+      ],
+      foto_masjid: row.foto_masjid
+        ? [{ url: row.foto_masjid, keterangan: row.keterangan_foto }]
+        : [],
+    });
+  } else {
+    const sejarahIndex = acc[masjidIndex].sejarah.findIndex(
+      (s) => s.bagian === row.bagian
+    );
+
+    if (sejarahIndex === -1) {
+      acc[masjidIndex].sejarah.unshift({
+        bagian: row.bagian,
+        keterangan: row.sejarah,
+        fotoUrl: row.foto_sejarah,
+      });
+    }
+
+    const fotoMasjidIndex = acc[masjidIndex].foto_masjid.findIndex(
+      (f) => f.url === row.foto_masjid
+    );
+
+    if (fotoMasjidIndex === -1) {
+      acc[masjidIndex].foto_masjid.push({
+        url: row.foto_masjid,
+        keterangan: row.keterangan_foto,
+      });
+    }
+  }
+
+  return acc;
+}
+
 const masjidController = {
   getAll: async (req, res) => {
     const query = `
@@ -12,7 +62,8 @@ const masjidController = {
         m.tanggal_dibuat,
         s.bagian,
         s.keterangan AS sejarah,
-        f.foto_url AS foto_sejarah,
+        s.foto_url AS foto_sejarah,
+        f.foto_url AS foto_masjid,
         f.keterangan AS keterangan_foto
       FROM masjid m
       LEFT JOIN sejarah_masjid s ON m.id = s.masjid_id
@@ -22,59 +73,12 @@ const masjidController = {
     try {
       const [rows, fields] = await pool.query(query);
       const formattedResult = {
-        data: rows.reduce((acc, row) => {
-          const masjidIndex = acc.findIndex((m) => m.id === row.id);
-
-          if (masjidIndex === -1) {
-            acc.push({
-              id: row.id,
-              nama_masjid: row.nama_masjid,
-              lokasi: row.lokasi,
-              negara: row.negara,
-              tanggal_dibuat: row.tanggal_dibuat,
-              sejarah: [
-                {
-                  bagian: row.bagian,
-                  keterangan: row.sejarah,
-                  fotoUrl: row.foto_sejarah,
-                },
-              ],
-              foto_masjid: [
-                {
-                  url: row.foto_masjid,
-                  keterangan: row.keterangan_foto,
-                },
-              ],
-            });
-          } else {
-            const sejarahIndex = acc[masjidIndex].sejarah.findIndex(
-              (s) => s.bagian === row.bagian
-            );
-
-            if (sejarahIndex === -1) {
-              acc[masjidIndex].sejarah.push({
-                bagian: row.bagian,
-                keterangan: row.sejarah,
-                fotoUrl: row.foto_sejarah,
-              });
-            }
-
-            // Check if the foto_masjid URL is already present for the masjid
-            const fotoMasjidIndex = acc[masjidIndex].foto_masjid.findIndex(
-              (f) => f.url === row.foto_masjid
-            );
-
-            if (fotoMasjidIndex === -1) {
-              acc[masjidIndex].foto_masjid.push({
-                url: row.foto_masjid,
-                keterangan: row.keterangan_foto,
-              });
-            }
-          }
-
-          return acc;
-        }, []),
+        data: rows.reduce(buildResultStructure, []),
       };
+
+      formattedResult.data.forEach((masjid) => {
+        masjid.sejarah.sort((a, b) => b.bagian - a.bagian);
+      });
 
       res
         .status(200)
@@ -82,7 +86,7 @@ const masjidController = {
           ApiResponse.success(formattedResult, "Data masjid berhasil diambil")
         );
     } catch (error) {
-      console.log(error);
+      console.error("Error in getAll:", error);
       res.status(500).json(ApiResponse.error("Gagal mengambil data masjid"));
     }
   },
@@ -104,6 +108,7 @@ const masjidController = {
         m.tanggal_dibuat,
         s.bagian,
         s.keterangan AS sejarah,
+        s.foto_url AS foto_sejarah,
         f.foto_url AS foto_masjid,
         f.keterangan AS keterangan_foto
       FROM masjid m
@@ -121,64 +126,32 @@ const masjidController = {
       }
 
       const formattedResult = {
-        status: "success",
-        data: rows.reduce((acc, row) => {
-          const masjidIndex = acc.findIndex((m) => m.id === row.id);
-
-          if (masjidIndex === -1) {
-            acc.push({
-              id: row.id,
-              nama_masjid: row.nama_masjid,
-              lokasi: row.lokasi,
-              negara: row.negara,
-              tanggal_dibuat: row.tanggal_dibuat,
-              sejarah: [
-                {
-                  bagian: row.bagian,
-                  keterangan: row.sejarah,
-                  fotoUrl: row.foto_masjid,
-                },
-              ],
-              foto_masjid: [
-                {
-                  url: row.foto_masjid,
-                  keterangan: row.keterangan_foto,
-                },
-              ],
-            });
-          } else {
-            const sejarahIndex = acc[masjidIndex].sejarah.findIndex(
-              (s) => s.bagian === row.bagian
-            );
-
-            if (sejarahIndex === -1) {
-              acc[masjidIndex].sejarah.push({
-                bagian: row.bagian,
-                keterangan: row.sejarah,
-                fotoUrl: row.foto_masjid,
-              });
-            }
-
-            // Check if the foto_masjid URL is already present for the masjid
-            const fotoMasjidIndex = acc[masjidIndex].foto_masjid.findIndex(
-              (f) => f.url === row.foto_masjid
-            );
-
-            if (fotoMasjidIndex === -1) {
-              acc[masjidIndex].foto_masjid.push({
-                url: row.foto_masjid,
-                keterangan: row.keterangan_foto,
-              });
-            }
-          }
-
-          return acc;
-        }, []),
+        id: rows[0].id,
+        nama_masjid: rows[0].nama_masjid,
+        lokasi: rows[0].lokasi,
+        negara: rows[0].negara,
+        tanggal_dibuat: rows[0].tanggal_dibuat,
+        sejarah: rows.map((row) => ({
+          bagian: row.bagian,
+          keterangan: row.sejarah,
+          fotoUrl: row.foto_sejarah,
+        })),
+        foto_masjid: rows[0].foto_masjid
+          ? [{ url: rows[0].foto_masjid, keterangan: rows[0].keterangan_foto }]
+          : [],
       };
 
-      res.status(200).json(formattedResult);
+      formattedResult.sejarah.sort(
+        (a, b) => new Date(b.tanggal_dibuat) - new Date(a.tanggal_dibuat)
+      );
+
+      res
+        .status(200)
+        .json(
+          ApiResponse.success(formattedResult, "Data masjid berhasil diambil")
+        );
     } catch (error) {
-      console.log(error);
+      console.error("Error in getById:", error);
       res.status(500).json(ApiResponse.error("Gagal mengambil data masjid"));
     }
   },
@@ -202,6 +175,7 @@ const masjidController = {
         m.tanggal_dibuat,
         s.bagian,
         s.keterangan AS sejarah,
+        s.foto_url AS foto_sejarah,
         f.foto_url AS foto_masjid,
         f.keterangan AS keterangan_foto
       FROM masjid m
@@ -220,59 +194,12 @@ const masjidController = {
 
       const formattedResult = {
         status: "success",
-        data: rows.reduce((acc, row) => {
-          const masjidIndex = acc.findIndex((m) => m.id === row.id);
-
-          if (masjidIndex === -1) {
-            acc.push({
-              id: row.id,
-              nama_masjid: row.nama_masjid,
-              lokasi: row.lokasi,
-              negara: row.negara,
-              tanggal_dibuat: row.tanggal_dibuat,
-              sejarah: [
-                {
-                  bagian: row.bagian,
-                  keterangan: row.sejarah,
-                  fotoUrl: row.foto_masjid,
-                },
-              ],
-              foto_masjid: [
-                {
-                  url: row.foto_masjid,
-                  keterangan: row.keterangan_foto,
-                },
-              ],
-            });
-          } else {
-            const sejarahIndex = acc[masjidIndex].sejarah.findIndex(
-              (s) => s.bagian === row.bagian
-            );
-
-            if (sejarahIndex === -1) {
-              acc[masjidIndex].sejarah.push({
-                bagian: row.bagian,
-                keterangan: row.sejarah,
-                fotoUrl: row.foto_masjid,
-              });
-            }
-
-            // Check if the foto_masjid URL is already present for the masjid
-            const fotoMasjidIndex = acc[masjidIndex].foto_masjid.findIndex(
-              (f) => f.url === row.foto_masjid
-            );
-
-            if (fotoMasjidIndex === -1) {
-              acc[masjidIndex].foto_masjid.push({
-                url: row.foto_masjid,
-                keterangan: row.keterangan_foto,
-              });
-            }
-          }
-
-          return acc;
-        }, []),
+        data: rows.reduce(buildResultStructure, []),
       };
+
+      formattedResult.data.forEach((masjid) => {
+        masjid.sejarah.sort((a, b) => b.bagian - a.bagian);
+      });
 
       res
         .status(200)
@@ -280,13 +207,12 @@ const masjidController = {
           ApiResponse.success(formattedResult, "Data masjid berhasil ditemukan")
         );
     } catch (error) {
-      console.log(error);
+      console.error("Error in searchByName:", error);
       res
         .status(500)
         .json(ApiResponse.error("Gagal melakukan pencarian data masjid"));
     }
   },
-
 };
 
 module.exports = masjidController;
