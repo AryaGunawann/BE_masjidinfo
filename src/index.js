@@ -1,14 +1,15 @@
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
+require("dotenv").config();
 
 const masjidRoutes = require("./routes/masjidRoutes");
 const detailMasjidRoutes = require("./routes/detailMasjidRoutes");
 const photoRoutes = require("./routes/photoRoutes");
 const sejarahRoutes = require("./routes/sejarahRoutes");
-const categoryRoutes = require("./routes/categoryController");
+const categoryRoutes = require("./routes/categoryRoutes");
 const discussionRoutes = require("./routes/discussionRoutes");
-const historyRoutes = require("./routes/historyController");
+const historyRoutes = require("./routes/historyRoutes");
 
 // Middleware
 app.use(express.json());
