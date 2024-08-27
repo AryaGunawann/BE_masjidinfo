@@ -1,12 +1,11 @@
 const express = require("express");
 const MasjidController = require("../controllers/masjidController");
-
 const router = express.Router();
 
-router.post("/", MasjidController.createMasjid);
-router.get("/", MasjidController.getAllMasjids);
-router.get("/:id", MasjidController.getMasjidById);
-router.put("/:id", MasjidController.updateMasjid);
-router.delete("/:id", MasjidController.deleteMasjid);
+router.post("/masjids", MasjidController.create);
+router.get("/masjids", MasjidController.getAll);
+router.get("/masjids/:id", MasjidController.getById);
+router.put("/masjids/:id", MasjidController.update);
+router.delete("/masjids/:id", MasjidController.delete);
 
 module.exports = router;

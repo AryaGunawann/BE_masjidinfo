@@ -1,13 +1,13 @@
+// controllers/detailMasjidController.js
 const DetailMasjidService = require("../services/detailMasjidService");
 
 class DetailMasjidController {
   static async create(req, res) {
     try {
-      const data = req.body;
-      const newDetailMasjid = await DetailMasjidService.createDetailMasjid(
-        data
+      const detailMasjid = await DetailMasjidService.createDetailMasjid(
+        req.body
       );
-      res.status(201).json(newDetailMasjid);
+      res.status(201).json(detailMasjid);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -24,10 +24,11 @@ class DetailMasjidController {
 
   static async getById(req, res) {
     try {
-      const { id } = req.parasm;
-      const detailMasjid = await DetailMasjidService.getDetailMasjidById(id);
+      const detailMasjid = await DetailMasjidService.getDetailMasjidById(
+        req.params.id
+      );
       if (!detailMasjid) {
-        return res.status(404).json({ error: "Detail Masjid not found" });
+        return res.status(404).json({ message: "DetailMasjid not found" });
       }
       res.status(200).json(detailMasjid);
     } catch (error) {
@@ -37,16 +38,14 @@ class DetailMasjidController {
 
   static async update(req, res) {
     try {
-      const { id } = req.params;
-      const data = req.body;
-      const updateDetailMasjid = await DetailMasjidService.updateDetailMasjid(
-        id,
-        data
+      const detailMasjid = await DetailMasjidService.updateDetailMasjid(
+        req.params.id,
+        req.body
       );
-      if (!updateDetailMasjid) {
-        return res.status(404).json({ error: "Detail Masjid not found" });
+      if (!detailMasjid) {
+        return res.status(404).json({ message: "DetailMasjid not found" });
       }
-      res.status(200).json(updateDetailMasjid);
+      res.status(200).json(detailMasjid);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
@@ -54,14 +53,13 @@ class DetailMasjidController {
 
   static async delete(req, res) {
     try {
-      const { id } = req.params;
-      const deleteDetailMasjid = await DetailMasjidService.deleteDetailMasjid(
-        id
+      const detailMasjid = await DetailMasjidService.deleteDetailMasjid(
+        req.params.id
       );
-      if (!deleteDetailMasjid) {
-        return res.status(404).json({ error: "Detail Masjid not Found" });
+      if (!detailMasjid) {
+        return res.status(404).json({ message: "DetailMasjid not found" });
       }
-      res.status(204).json();
+      res.status(200).json({ message: "DetailMasjid deleted successfully" });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

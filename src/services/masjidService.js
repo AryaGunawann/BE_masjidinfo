@@ -2,43 +2,23 @@ const MasjidModel = require("../models/masjidModel");
 
 class MasjidService {
   static async createMasjid(data) {
-    try {
-      return await MasjidModel.create(data);
-    } catch (error) {
-      throw new Error("Failed to create masjid: " + error.message);
-    }
+    return await MasjidModel.create(data);
   }
 
-  static async findAllMasjids() {
-    try {
-      return await MasjidModel.findAll();
-    } catch (error) {
-      throw new Error("Failed to retrieve masjids: " + error.message);
-    }
+  static async getAllMasjids() {
+    return await MasjidModel.findAll();
   }
 
-  static async findMasjidById(id) {
-    try {
-      return await MasjidModel.findById(id);
-    } catch (error) {
-      throw new Error("Failed to retrieve masjid by ID: " + error.message);
-    }
+  static async getMasjidById(id) {
+    return await MasjidModel.findById(id);
   }
 
   static async updateMasjid(id, data) {
-    try {
-      return await MasjidModel.update(id, data);
-    } catch (error) {
-      throw new Error("Failed to update masjid: " + error.message);
-    }
+    return await MasjidModel.update(id, data);
   }
 
   static async deleteMasjid(id) {
-    try {
-      return await MasjidModel.delete(id);
-    } catch (error) {
-      throw new Error("Failed to delete masjid: " + error.message);
-    }
+    return await MasjidModel.delete(id);
   }
 }
 

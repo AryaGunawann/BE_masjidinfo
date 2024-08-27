@@ -6,15 +6,29 @@ class DiscussionModel {
   }
 
   static async findAll() {
-    return await prisma.discussion.findMany();
+    return await prisma.discussion.findMany({
+      include: {
+        user: true,
+        replies: true,
+      },
+    });
   }
 
   static async findById(id) {
-    return await prisma.discussion.findUnique({ where: { id } });
+    return await prisma.discussion.findUnique({
+      where: { id },
+      include: {
+        user: true,
+        replies: true,
+      },
+    });
   }
 
   static async update(id, data) {
-    return await prisma.discussion.update({ where: { id }, data });
+    return await prisma.discussion.update({
+      where: { id },
+      data,
+    });
   }
 
   static async delete(id) {

@@ -1,12 +1,11 @@
 const express = require("express");
 const DetailMasjidController = require("../controllers/detailMasjidController");
-
 const router = express.Router();
 
-router.post("/", DetailMasjidController.create);
-router.get("/", DetailMasjidController.getAll);
-router.get("/", DetailMasjidController.getById);
-router.put("/", DetailMasjidController.update);
-router.delete("/", DetailMasjidController.delete);
+router.post("/detailmasjids", DetailMasjidController.create);
+router.get("/detailmasjids", DetailMasjidController.getAll);
+router.get("/detailmasjids/:id", DetailMasjidController.getById);
+router.put("/detailmasjids/:id", DetailMasjidController.update);
+router.delete("/detailmasjids/:id", DetailMasjidController.delete);
 
 module.exports = router;
