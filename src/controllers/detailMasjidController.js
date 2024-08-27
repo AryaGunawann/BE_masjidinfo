@@ -15,7 +15,7 @@ class DetailMasjidController {
 
   static async getAll(req, res) {
     try {
-      const detailMasjids = await DetailMasjidService.getAllDetailMasjid();
+      const detailMasjids = await DetailMasjidService.getAllDetailMasjids();
       res.status(200).json(detailMasjids);
     } catch (error) {
       res.status(500).json({ error: error.message });
