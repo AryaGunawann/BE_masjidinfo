@@ -11,7 +11,9 @@ const authMiddleware = async (req, res, next) => {
 
     jwt.verify(token, process.env.JWT_SECRET, async (err, user) => {
       if (err) return res.sendStatus(403); // Forbidden
+
       req.user = await UserModel.findById(user.id);
+      req.role = user.role; // Add role to req
       next();
     });
   } catch (error) {

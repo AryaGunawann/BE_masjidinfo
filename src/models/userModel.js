@@ -2,7 +2,12 @@ const prisma = require("../config/dbConfig");
 
 class UserModel {
   static async create(data) {
-    return await prisma.user.create({ data });
+    return await prisma.user.create({
+      data: {
+        ...data,
+        role: data.role || "USER", // Default to USER if no role is specified
+      },
+    });
   }
 
   static async findById(id) {
@@ -23,12 +28,10 @@ class UserModel {
 
   static async updateVerificationToken(id, token) {
     return await prisma.user.update({
-      where: {
-        id: id,
-      },
+      where: { id },
       data: {
-        reset_password_token: token, // atau gunakan verification_token jika ada
-        is_email_verification: false, // Atur ke false sampai verifikasi selesai
+        reset_password_token: token,
+        is_email_verification: false,
       },
     });
   }
@@ -36,13 +39,13 @@ class UserModel {
   static async verifyUser(token) {
     return await prisma.user.updateMany({
       where: {
-        reset_password_token: token, // Gantilah `reset_password_token` dengan nama field yang tepat jika Anda menggunakan nama yang berbeda
+        reset_password_token: token,
         is_verified: false,
       },
       data: {
-        is_verified: true, // Atur pengguna menjadi terverifikasi
-        is_email_verification: true, // Tandai email sebagai terverifikasi
-        reset_password_token: null, // Hapus token setelah verifikasi
+        is_verified: true,
+        is_email_verification: true,
+        reset_password_token: null,
       },
     });
   }

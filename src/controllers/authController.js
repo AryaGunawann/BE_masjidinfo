@@ -7,9 +7,13 @@ class AuthController {
       const user = await UserService.register(req.body);
 
       // Create JWT Token
-      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN,
-      });
+      const token = jwt.sign(
+        { id: user.id, role: user.role },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: process.env.JWT_EXPIRES_IN,
+        }
+      );
 
       res.status(201).json({ token, user });
     } catch (error) {
@@ -22,9 +26,13 @@ class AuthController {
       const user = await UserService.login(req.body.email, req.body.password);
 
       // Create JWT Token
-      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN,
-      });
+      const token = jwt.sign(
+        { id: user.id, role: user.role },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: process.env.JWT_EXPIRES_IN,
+        }
+      );
 
       res.status(200).json({ token, user });
     } catch (error) {

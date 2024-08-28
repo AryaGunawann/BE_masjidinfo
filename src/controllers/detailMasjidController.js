@@ -1,9 +1,12 @@
-// controllers/detailMasjidController.js
 const DetailMasjidService = require("../services/detailMasjidService");
 
 class DetailMasjidController {
   static async create(req, res) {
     try {
+      const user = req.user;
+      if (user.role !== "author" && user.role !== "admin") {
+        return res.status(403).json({ message: " Forbidden" });
+      }
       const detailMasjid = await DetailMasjidService.createDetailMasjid(
         req.body
       );
@@ -38,6 +41,10 @@ class DetailMasjidController {
 
   static async update(req, res) {
     try {
+      const user = req.user;
+      if (user.role !== "admin") {
+        return res.status(403).json({ message: "Forbidden" });
+      }
       const detailMasjid = await DetailMasjidService.updateDetailMasjid(
         req.params.id,
         req.body
@@ -53,6 +60,10 @@ class DetailMasjidController {
 
   static async delete(req, res) {
     try {
+      const user = req.user;
+      if (user.role !== "admin") {
+        return res.status(403).json({ message: "Forbidden" });
+      }
       const detailMasjid = await DetailMasjidService.deleteDetailMasjid(
         req.params.id
       );
