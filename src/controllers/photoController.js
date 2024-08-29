@@ -3,6 +3,10 @@ const PhotoService = require("../services/photoService");
 class PhotoController {
   static async create(req, res) {
     try {
+      const user = req.user;
+      if (user.role !== "author" && user.role !== "admin") {
+        res.status(403).json({ message: "Forbidden" });
+      }
       const data = req.body;
       const newPhoto = await PhotoService.createPhoto(data);
       res.status(201).json(newPhoto);
@@ -35,6 +39,10 @@ class PhotoController {
 
   static async update(req, res) {
     try {
+      const user = req.user;
+      if (user.role !== "admin") {
+        return res.status(403).json({ message: "Forbidden" });
+      }
       const { id } = req.params;
       const data = req.body;
       const updatedPhoto = await PhotoService.updatePhoto(id, data);
@@ -49,6 +57,10 @@ class PhotoController {
 
   static async delete(req, res) {
     try {
+      const user = req.user;
+      if (user.role !== "admin") {
+        return res.status(403).json({ message: "Forbidden" });
+      }
       const { id } = req.params;
       const deletedPhoto = await PhotoService.deletePhoto(id);
       if (!deletedPhoto) {

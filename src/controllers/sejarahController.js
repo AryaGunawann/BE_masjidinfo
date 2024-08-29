@@ -4,6 +4,10 @@ const SejarahService = require("../services/sejarahService");
 class SejarahController {
   static async create(req, res) {
     try {
+      const user = req.user;
+      if (user.role !== "author" && user.role !== "admin") {
+        return res.status(403).json({ message: "Forbidden" });
+      }
       const data = req.body;
       const newSejarah = await SejarahService.createSejarah(data);
       res.status(201).json(newSejarah);
@@ -36,6 +40,10 @@ class SejarahController {
 
   static async update(req, res) {
     try {
+      const user = req.user;
+      if (user.role !== "admin") {
+        return res.status(403).json({ message: "Forbidden" });
+      }
       const { id } = req.params;
       const data = req.body;
       const updateSejarah = await SejarahService.updateSejarah(id, data);
@@ -50,6 +58,10 @@ class SejarahController {
 
   static async delete(req, res) {
     try {
+      const user = req.user;
+      if (user.role !== "admin") {
+        return res.status(403).json({ message: "Forbidden" });
+      }
       const { id } = req.params;
       const deletedSejarah = await SejarahService.deleteSejarah(id);
       if (!deletedSejarah) {
