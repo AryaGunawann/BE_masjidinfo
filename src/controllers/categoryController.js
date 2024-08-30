@@ -2,6 +2,10 @@ const CategoryService = require("../services/categoryService");
 
 class CategoryController {
   static async create(req, res) {
+    const user = req.user;
+    if (user.role !== "author" && user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
     try {
       const category = await CategoryService.createCategory(req.body);
       res.status(201).json(category);
@@ -32,6 +36,10 @@ class CategoryController {
   }
 
   static async update(req, res) {
+    const user = req.user;
+    if (user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
     try {
       const category = await CategoryService.updateCategory(
         req.params.id,
@@ -48,6 +56,10 @@ class CategoryController {
 
   static async delete(req, res) {
     try {
+      const user = req.user;
+      if (user.role !== "admin") {
+        return res.status(403).json({ message: "Forbidden" });
+      }
       const category = await CategoryService.deleteCategory(req.params.id);
       if (!category) {
         return res.status(404).json({ message: "Category not found" });

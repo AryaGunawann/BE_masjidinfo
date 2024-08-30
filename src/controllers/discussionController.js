@@ -3,6 +3,10 @@ const DiscussionService = require("../services/discussionService");
 class DiscussionController {
   static async create(req, res) {
     try {
+      const user = req.user;
+      if (user.role !== "author" && user.role !== "admin") {
+        return res.status(403).json({ message: "Forbidden" });
+      }
       const discussion = await DiscussionService.createDiscussion(req.body);
       res.status(201).json(discussion);
     } catch (error) {
@@ -12,6 +16,10 @@ class DiscussionController {
 
   static async getAll(req, res) {
     try {
+      const user = req.user;
+      if (user.role !== "admin") {
+        return res.status(403).json({ message: "Forbidden" });
+      }
       const discussions = await DiscussionService.getAllDiscussions();
       res.status(200).json(discussions);
     } catch (error) {
@@ -21,6 +29,10 @@ class DiscussionController {
 
   static async getById(req, res) {
     try {
+      const user = req.user;
+      if (user.role !== "admin") {
+        return res.status(403).json({ message: "Forbidden" });
+      }
       const discussion = await DiscussionService.getDiscussionById(
         req.params.id
       );
@@ -35,6 +47,10 @@ class DiscussionController {
 
   static async update(req, res) {
     try {
+      const user = req.user;
+      if (user.role !== "admin") {
+        return res.status(403).json({ message: "Forbidden" });
+      }
       const discussion = await DiscussionService.updateDiscussion(
         req.params.id,
         req.body
@@ -50,6 +66,10 @@ class DiscussionController {
 
   static async delete(req, res) {
     try {
+      const user = req.user;
+      if (user.role !== "admin") {
+        return res.status(403).json({ message: "Forbidden" });
+      }
       const discussion = await DiscussionService.deleteDiscussion(
         req.params.id
       );
