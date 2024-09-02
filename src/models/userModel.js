@@ -79,6 +79,10 @@ class UserModel {
       },
     });
   }
+
+  static async findAll() {
+    return await prisma.user.findMany();
+  }
 }
 
 module.exports = UserModel;

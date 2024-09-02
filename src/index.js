@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
+const cors = require("cors");
 require("dotenv").config();
 
 const userRoutes = require("./routes/userRoutes");
@@ -13,6 +14,7 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const discussionRoutes = require("./routes/discussionRoutes");
 const historyRoutes = require("./routes/historyRoutes");
 
+app.use(cors());
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

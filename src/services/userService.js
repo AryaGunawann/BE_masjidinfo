@@ -93,6 +93,10 @@ class UserService {
   static async deleteUser(id) {
     return await UserModel.delete(id);
   }
+
+  static async getAllUsers() {
+    return await UserModel.findAll();
+  }
 }
 
 module.exports = UserService;
