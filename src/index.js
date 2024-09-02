@@ -11,6 +11,7 @@ const detailMasjidRoutes = require("./routes/detailMasjidRoutes");
 const photoRoutes = require("./routes/photoRoutes");
 const sejarahRoutes = require("./routes/sejarahRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
+const masjidCategoryRoutes = require("./routes/masjidCategoryRoutes");
 const discussionRoutes = require("./routes/discussionRoutes");
 const historyRoutes = require("./routes/historyRoutes");
 
@@ -26,6 +27,7 @@ app.use("/api", detailMasjidRoutes);
 app.use("/api", photoRoutes);
 app.use("/api", sejarahRoutes);
 app.use("/api", categoryRoutes);
+app.use("/api/", masjidCategoryRoutes);
 app.use("/api", discussionRoutes);
 app.use("/api", historyRoutes);
 
