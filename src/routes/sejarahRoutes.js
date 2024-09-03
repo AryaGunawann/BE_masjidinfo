@@ -4,10 +4,10 @@ const SejarahController = require("../controllers/sejarahController");
 
 const router = express.Router();
 
-router.post("/sejarah", authMiddleware, SejarahController.create);
+router.post("/sejarah", SejarahController.create);
 router.get("/sejarah", SejarahController.getAll);
 router.get("/sejarah/:id", SejarahController.getById);
-router.put("/sejarah/:id", authMiddleware, SejarahController.update);
-router.delete("/sejarah/:id", authMiddleware, SejarahController.delete);
+router.put("/sejarah/:id", SejarahController.update);
+router.delete("/sejarah/:id", SejarahController.delete);
 
 module.exports = router;

@@ -94,6 +94,10 @@ class UserService {
     return await UserModel.delete(id);
   }
 
+  static async getUserById(id) {
+    return await UserModel.findById(id);
+  }
+
   static async getAllUsers() {
     return await UserModel.findAll();
   }

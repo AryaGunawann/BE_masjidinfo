@@ -1,25 +1,91 @@
 const jwt = require("jsonwebtoken");
-const UserModel = require("../models/userModel");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
-const authMiddleware = async (req, res, next) => {
+const authenticate = async (req, res, next) => {
+  // Mengambil seluruh header Authorization sebagai token
+  const token = req.headers.authorization;
+  if (!token) return res.status(401).json({ message: "No token provided" });
+
   try {
-    const authHeader = req.headers["authorization"];
-    if (!authHeader) return res.sendStatus(401); // Unauthorized
-
-    const token = authHeader.split(" ")[1];
-    if (!token) return res.sendStatus(401); // Unauthorized
-
-    jwt.verify(token, process.env.JWT_SECRET, async (err, user) => {
-      if (err) return res.sendStatus(403); // Forbidden
-
-      req.user = await UserModel.findById(user.id);
-      req.role = user.role; // Add role to req
-      next();
-    });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = await prisma.user.findUnique({ where: { id: decoded.id } });
+    if (!req.user) return res.status(401).json({ message: "Invalid token" });
+    next();
   } catch (error) {
-    console.error(error);
-    res.sendStatus(500); // Internal Server Error
+    res.status(401).json({ message: "Invalid token" });
   }
 };
 
-module.exports = authMiddleware;
+const authorize = (roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+    next();
+  };
+};
+
+const authenticateToken = (req, res, next) => {
+  const token = req.headers.authorization; // Mengambil seluruh header Authorization sebagai token
+
+  if (token == null) return res.sendStatus(401); // Tidak ada token ditemukan
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403); // Token tidak valid
+    req.user = user;
+    next();
+  });
+};
+
+// Middleware untuk otorisasi berdasarkan peran pengguna
+const authorizeRole = (roles) => {
+  return async (req, res, next) => {
+    if (!req.user) return res.sendStatus(401); // Tidak ada informasi pengguna
+    if (!roles.includes(req.user.role)) return res.sendStatus(403); // Akses ditolak
+
+    // Validasi opsional: Memeriksa apakah pengguna ada di database
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+    });
+    if (!user) return res.sendStatus(403); // Pengguna tidak ditemukan
+
+    next();
+  };
+};
+
+const authenticateUser = (req, res, next) => {
+  const token = req.header("Authorization");
+  if (!token) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    res.status(401).json({ message: "Invalid token" });
+  }
+};
+
+const authorizationMiddleware = (roles) => {
+  return (req, res, next) => {
+    const userRole = req.user.role;
+
+    if (roles.includes(userRole)) {
+      next();
+    } else {
+      res.status(403).json({ error: "Access denied" });
+    }
+  };
+};
+
+module.exports = {
+  authenticate,
+  authorize,
+  authenticateToken,
+  authorizeRole,
+  authenticateUser,
+  authorizationMiddleware,
+};
