@@ -1,6 +1,7 @@
 const DiscussionService = require("../services/discussionService");
 
 class DiscussionController {
+  // Hanya author dan admin yang dapat membuat diskusi
   static async create(req, res) {
     try {
       const user = req.user;
@@ -14,6 +15,7 @@ class DiscussionController {
     }
   }
 
+  // Hanya admin yang dapat melihat semua diskusi
   static async getAll(req, res) {
     try {
       const user = req.user;
@@ -27,6 +29,7 @@ class DiscussionController {
     }
   }
 
+  // Hanya admin yang dapat melihat diskusi berdasarkan ID
   static async getById(req, res) {
     try {
       const user = req.user;
@@ -45,6 +48,7 @@ class DiscussionController {
     }
   }
 
+  // Hanya admin yang dapat memperbarui diskusi
   static async update(req, res) {
     try {
       const user = req.user;
@@ -64,6 +68,7 @@ class DiscussionController {
     }
   }
 
+  // Hanya admin yang dapat menghapus diskusi
   static async delete(req, res) {
     try {
       const user = req.user;

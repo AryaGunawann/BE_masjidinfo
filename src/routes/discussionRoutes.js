@@ -1,12 +1,30 @@
 const express = require("express");
 const DiscussionController = require("../controllers/discussionController");
-
+const { authenticate, authorize } = require("../middlewares/authMiddleware");
 const router = express.Router();
 
-router.post("/discussions", DiscussionController.create);
 router.get("/discussions", DiscussionController.getAll);
 router.get("/discussions/:id", DiscussionController.getById);
-router.put("/discussions/:id", DiscussionController.update);
-router.delete("/discussions/:id", DiscussionController.delete);
+
+router.post(
+  "/discussions",
+  authenticate,
+  authorize(["AUTHOR", "ADMIN"]),
+  DiscussionController.create
+);
+
+router.put(
+  "/discussions/:id",
+  authenticate,
+  authorize(["AUTHOR", "ADMIN"]),
+  DiscussionController.update
+);
+
+router.delete(
+  "/discussions/:id",
+  authenticate,
+  authorize("ADMIN"),
+  DiscussionController.delete
+);
 
 module.exports = router;

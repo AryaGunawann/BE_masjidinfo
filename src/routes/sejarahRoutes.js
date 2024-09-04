@@ -1,13 +1,31 @@
 const express = require("express");
-const authMiddleware = require("../middlewares/authMiddleware");
+const { authenticate, authorize } = require("../middlewares/authMiddleware");
 const SejarahController = require("../controllers/sejarahController");
 
 const router = express.Router();
 
-router.post("/sejarah", SejarahController.create);
 router.get("/sejarah", SejarahController.getAll);
 router.get("/sejarah/:id", SejarahController.getById);
-router.put("/sejarah/:id", SejarahController.update);
-router.delete("/sejarah/:id", SejarahController.delete);
+
+router.post(
+  "/sejarah",
+  authenticate,
+  authorize(["AUTHOR", "ADMIN"]),
+  SejarahController.create
+);
+
+router.put(
+  "/sejarah/:id",
+  authenticate,
+  authorize(["AUTHOR", "ADMIN"]),
+  SejarahController.update
+);
+
+router.delete(
+  "/sejarah/:id",
+  authenticate,
+  authorize(["ADMIN"]),
+  SejarahController.delete
+);
 
 module.exports = router;

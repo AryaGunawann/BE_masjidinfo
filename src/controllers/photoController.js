@@ -1,20 +1,7 @@
 const PhotoService = require("../services/photoService");
 
 class PhotoController {
-  static async create(req, res) {
-    try {
-      const user = req.user;
-      if (user.role !== "author" && user.role !== "admin") {
-        res.status(403).json({ message: "Forbidden" });
-      }
-      const data = req.body;
-      const newPhoto = await PhotoService.createPhoto(data);
-      res.status(201).json(newPhoto);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
-
+  // Semua pengguna dapat melihat semua foto
   static async getAll(req, res) {
     try {
       const photoList = await PhotoService.getAllPhotos();
@@ -24,6 +11,7 @@ class PhotoController {
     }
   }
 
+  // Semua pengguna dapat melihat foto berdasarkan ID
   static async getById(req, res) {
     try {
       const { id } = req.params;
@@ -37,35 +25,61 @@ class PhotoController {
     }
   }
 
+  // Author dan admin dapat membuat foto baru
+  static async create(req, res) {
+    try {
+      const user = req.user;
+      if (user.role === "AUTHOR" || user.role === "ADMIN") {
+        const data = req.body;
+        const newPhoto = await PhotoService.createPhoto(data, user.id);
+        res.status(201).json(newPhoto);
+      } else {
+        res.status(403).json({ message: "Forbidden" });
+      }
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  // Admin dapat mengedit semua foto
+  // Author hanya dapat mengedit foto yang mereka buat sendiri
   static async update(req, res) {
     try {
       const user = req.user;
-      if (user.role !== "admin") {
-        return res.status(403).json({ message: "Forbidden" });
-      }
       const { id } = req.params;
       const data = req.body;
-      const updatedPhoto = await PhotoService.updatePhoto(id, data);
-      if (!updatedPhoto) {
+      const photo = await PhotoService.getPhotoById(id);
+      if (!photo) {
         return res.status(404).json({ error: "Photo not found" });
       }
+
+      if (user.role === "AUTHOR" && photo.authorId !== user.id) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      const updatedPhoto = await PhotoService.updatePhoto(id, data);
       res.status(200).json(updatedPhoto);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   }
 
+  // Admin dapat menghapus semua foto
+  // Author hanya dapat menghapus foto yang mereka buat sendiri
   static async delete(req, res) {
     try {
       const user = req.user;
-      if (user.role !== "admin") {
-        return res.status(403).json({ message: "Forbidden" });
-      }
       const { id } = req.params;
-      const deletedPhoto = await PhotoService.deletePhoto(id);
-      if (!deletedPhoto) {
+      const photo = await PhotoService.getPhotoById(id);
+      if (!photo) {
         return res.status(404).json({ error: "Photo not found" });
       }
+
+      if (user.role === "AUTHOR" && photo.authorId !== user.id) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      await PhotoService.deletePhoto(id);
       res.status(204).json();
     } catch (error) {
       res.status(500).json({ error: error.message });

@@ -1,19 +1,7 @@
 const CategoryService = require("../services/categoryService");
 
 class CategoryController {
-  static async create(req, res) {
-    const user = req.user;
-    if (user.role !== "author" && user.role !== "admin") {
-      return res.status(403).json({ message: "Forbidden" });
-    }
-    try {
-      const category = await CategoryService.createCategory(req.body);
-      res.status(201).json(category);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
-
+  // Semua pengguna dapat melihat semua kategori
   static async getAll(req, res) {
     try {
       const categories = await CategoryService.getAllCategories();
@@ -23,6 +11,7 @@ class CategoryController {
     }
   }
 
+  // Semua pengguna dapat melihat kategori berdasarkan ID
   static async getById(req, res) {
     try {
       const category = await CategoryService.getCategoryById(req.params.id);
@@ -35,9 +24,24 @@ class CategoryController {
     }
   }
 
+  // Hanya author dan admin yang dapat membuat kategori baru
+  static async create(req, res) {
+    const user = req.user;
+    if (user.role !== "AUTHOR" && user.role !== "ADMIN") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+    try {
+      const category = await CategoryService.createCategory(req.body);
+      res.status(201).json(category);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  // Hanya admin yang dapat mengedit kategori
   static async update(req, res) {
     const user = req.user;
-    if (user.role !== "admin") {
+    if (user.role !== "ADMIN") {
       return res.status(403).json({ message: "Forbidden" });
     }
     try {
@@ -54,12 +58,13 @@ class CategoryController {
     }
   }
 
+  // Hanya admin yang dapat menghapus kategori
   static async delete(req, res) {
+    const user = req.user;
+    if (user.role !== "ADMIN") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
     try {
-      const user = req.user;
-      if (user.role !== "admin") {
-        return res.status(403).json({ message: "Forbidden" });
-      }
       const category = await CategoryService.deleteCategory(req.params.id);
       if (!category) {
         return res.status(404).json({ message: "Category not found" });
