@@ -1,8 +1,12 @@
 const MasjidCategoryModel = require("../models/MasjidCategoryModel.js");
 
 class MasjidCategoriesService {
-  static async createMasjidCategory(data) {
-    return await MasjidCategoryModel.create(data);
+  static async createMasjidCategory(data, userId) {
+    return await MasjidCategoryModel.create({
+      ...data,
+      created_by: userId,
+      updated_by: userId,
+    });
   }
 
   static async getAllMasjidCategories() {

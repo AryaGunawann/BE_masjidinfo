@@ -29,16 +29,16 @@ class DetailMasjidController {
   // Author atau admin dapat membuat detail masjid baru
   static async create(req, res) {
     try {
-      const user = req.user;
-      if (user.role === "AUTHOR" || user.role === "ADMIN") {
-        const detailMasjid = await DetailMasjidService.createDetailMasjid(
-          req.body,
-          user.id
-        );
-        res.status(201).json(detailMasjid);
-      } else {
-        res.status(403).json({ message: "Forbidden" });
+      if (req.user.role !== "AUTHOR" && req.user.role !== "ADMIN") {
+        return res.status(403).json({ message: "Access denied" });
       }
+      const userId = req.user.id;
+
+      const detailMasjid = await DetailMasjidService.createDetailMasjid(
+        req.body,
+        userId
+      );
+      res.status(201).json(detailMasjid);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

@@ -26,8 +26,14 @@ class MasjidController {
 
   static async create(req, res) {
     try {
-      // Author atau Admin dapat membuat masjid baru
-      const masjid = await MasjidService.createMasjid(req.body, req.user.id);
+      if (req.user.role !== "AUTHOR" && req.user.role !== "ADMIN") {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      // Mengambil ID user yang sedang login dari JWT
+      const userId = req.user.id;
+
+      const masjid = await MasjidService.createMasjid(req.body, userId);
       res.status(201).json(masjid);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -49,7 +55,8 @@ class MasjidController {
       // Admin dapat mengedit masjid apa pun
       const updatedMasjid = await MasjidService.updateMasjid(
         req.params.id,
-        req.body
+        req.body,
+        req.user.id
       );
       res.status(200).json(updatedMasjid);
     } catch (error) {

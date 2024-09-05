@@ -1,8 +1,12 @@
 const SejarahModel = require("../models/SejarahModel");
 
 class SejarahService {
-  static async createSejarah(data) {
-    return await SejarahModel.create(data);
+  static async createSejarah(data, userId) {
+    return await SejarahModel.create({
+      ...data,
+      created_by: userId,
+      updated_by: userId,
+    });
   }
 
   static async getAllSejarah() {

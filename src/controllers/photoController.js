@@ -28,14 +28,14 @@ class PhotoController {
   // Author dan admin dapat membuat foto baru
   static async create(req, res) {
     try {
-      const user = req.user;
-      if (user.role === "AUTHOR" || user.role === "ADMIN") {
-        const data = req.body;
-        const newPhoto = await PhotoService.createPhoto(data, user.id);
-        res.status(201).json(newPhoto);
-      } else {
-        res.status(403).json({ message: "Forbidden" });
+      if (req.user.role !== "AUTHOR" && req.user.role !== "ADMIN") {
+        return res.status(403).json({ message: "Access denied" });
       }
+
+      const userId = req.user.id;
+
+      const newPhoto = await PhotoService.createPhoto(req.body, userId);
+      res.status(201).json(newPhoto);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

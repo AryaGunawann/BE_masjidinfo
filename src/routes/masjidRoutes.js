@@ -16,6 +16,7 @@ router.post(
 
 // Hanya admin yang bisa update dan delete masjid
 router.put(
+  "/masjids/:id",
   authenticate,
   authorize(["AUTHOR", "ADMIN"]),
   MasjidController.update

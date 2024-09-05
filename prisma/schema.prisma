@@ -104,10 +104,9 @@ model DetailMasjid {
 }
 
 model Sejarah {
-  id                        Int                 @id @default(autoincrement())
+  id                        String              @id @default(uuid()) @db.VarChar(255)
   title                     String              @db.VarChar(255)
   content                   String              @db.Text
-  masjidId                  String              @db.VarChar(255)
   detailMasjidId            String?             @db.VarChar(255)
   created_by                String              @db.VarChar(255)
   updated_by                String              @db.VarChar(255)
@@ -125,7 +124,6 @@ model Photo {
   id                        String              @id @default(uuid()) @db.VarChar(255)
   photo_url                 String              @db.Text
   caption                   String?             @db.Text
-  masjidId                  String?             @db.VarChar(255)
   detailMasjidId            String?             @db.VarChar(255)
   created_by                String              @db.VarChar(255)
   updated_by                String              @db.VarChar(255)

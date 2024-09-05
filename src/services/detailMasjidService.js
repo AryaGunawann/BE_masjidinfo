@@ -1,8 +1,12 @@
 const DetailMasjidModel = require("../models/detailMasjidModel");
 
 class DetailMasjidService {
-  static async createDetailMasjid(data) {
-    return await DetailMasjidModel.create(data);
+  static async createDetailMasjid(data, userId) {
+    return await DetailMasjidModel.create({
+      ...data,
+      created_by: userId,
+      updated_by: userId,
+    });
   }
 
   static async getAllDetailMasjids() {

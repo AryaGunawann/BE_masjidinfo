@@ -1,8 +1,12 @@
 const PhotoModel = require("../models/photoModel");
 
 class PhotoService {
-  static async createPhoto(data) {
-    return await PhotoModel.create(data);
+  static async createPhoto(data, userId) {
+    return await PhotoModel.create({
+      ...data,
+      created_by: userId,
+      updated_by: userId,
+    });
   }
 
   static async getAllPhotos() {

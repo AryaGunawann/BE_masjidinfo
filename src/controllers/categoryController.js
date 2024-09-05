@@ -26,12 +26,12 @@ class CategoryController {
 
   // Hanya author dan admin yang dapat membuat kategori baru
   static async create(req, res) {
-    const user = req.user;
-    if (user.role !== "AUTHOR" && user.role !== "ADMIN") {
-      return res.status(403).json({ message: "Forbidden" });
+    if (req.user.role !== "AUTHOR" && req.user.role !== "ADMIN") {
+      return res.status(403).json({ message: "Access denied" });
     }
+    const userId = req.user.id;
     try {
-      const category = await CategoryService.createCategory(req.body);
+      const category = await CategoryService.createCategory(req.body, userId);
       res.status(201).json(category);
     } catch (error) {
       res.status(500).json({ error: error.message });

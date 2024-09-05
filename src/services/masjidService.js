@@ -1,8 +1,12 @@
 const MasjidModel = require("../models/masjidModel");
 
 class MasjidService {
-  static async createMasjid(data) {
-    return await MasjidModel.create(data);
+  static async createMasjid(data, userId) {
+    return await MasjidModel.create({
+      ...data,
+      created_by: userId,
+      updated_by: userId,
+    });
   }
 
   static async getAllMasjids() {

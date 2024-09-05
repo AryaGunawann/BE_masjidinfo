@@ -1,8 +1,12 @@
 const CategoryModel = require("../models/categoryModel");
 
 class CategoryService {
-  static async createCategory(data) {
-    return await CategoryModel.create(data);
+  static async createCategory(data, userId) {
+    return await CategoryModel.create({
+      ...data,
+      created_by: userId,
+      updated_by: userId,
+    });
   }
 
   static async getAllCategories() {
