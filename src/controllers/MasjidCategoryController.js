@@ -1,7 +1,6 @@
 const MasjidCategoryService = require("../services/MasjidCategoryService.js");
 
 class MasjidCategoriesController {
-  // Semua pengguna dapat melihat semua kategori
   static async getAllMasjidCategories(req, res) {
     try {
       const categories = await MasjidCategoryService.getAllMasjidCategories();
@@ -11,7 +10,6 @@ class MasjidCategoriesController {
     }
   }
 
-  // Semua pengguna dapat melihat kategori berdasarkan ID
   static async getMasjidCategoryById(req, res) {
     try {
       const category = await MasjidCategoryService.getMasjidCategoryById(
@@ -26,29 +24,28 @@ class MasjidCategoriesController {
     }
   }
 
-  // Hanya author dan admin yang dapat membuat kategori baru
   static async createMasjidCategory(req, res) {
-    if (req.user.role !== "AUTHOR" && req.user.role !== "ADMIN") {
-      return res.status(403).json({ message: "Access denied" });
-    }
     const userId = req.user.id;
     try {
+      if (req.user.role !== "AUTHOR" && req.user.role !== "ADMIN") {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
       const category = await MasjidCategoryService.createMasjidCategory(
-        req.body,
+        {
+          masjidId: req.body.masjidId,
+          categoryId: req.body.categoryId,
+        },
         userId
       );
+
       res.status(201).json(category);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
   }
 
-  // Hanya admin yang dapat mengedit kategori
   static async updateMasjidCategory(req, res) {
-    const user = req.user;
-    if (user.role !== "ADMIN") {
-      return res.status(403).json({ message: "Forbidden" });
-    }
     try {
       const category = await MasjidCategoryService.updateMasjidCategory(
         req.params.id,
@@ -63,7 +60,6 @@ class MasjidCategoriesController {
     }
   }
 
-  // Hanya admin yang dapat menghapus kategori
   static async deleteMasjidCategory(req, res) {
     const user = req.user;
     if (user.role !== "ADMIN") {

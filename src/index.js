@@ -15,7 +15,12 @@ const masjidCategoryRoutes = require("./routes/masjidCategoryRoutes");
 const discussionRoutes = require("./routes/discussionRoutes");
 const historyRoutes = require("./routes/historyRoutes");
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3001", // frontend origin
+    methods: "GET,POST,PUT,DELETE",
+  })
+);
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -27,7 +32,7 @@ app.use("/api", detailMasjidRoutes);
 app.use("/api", photoRoutes);
 app.use("/api", sejarahRoutes);
 app.use("/api", categoryRoutes);
-app.use("/api/", masjidCategoryRoutes);
+app.use("/api", masjidCategoryRoutes);
 app.use("/api", discussionRoutes);
 app.use("/api", historyRoutes);
 

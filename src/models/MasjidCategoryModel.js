@@ -3,7 +3,20 @@ const prisma = require("../config/dbConfig");
 class MasjidCategoryModel {
   static async create(data) {
     return await prisma.masjidCategory.create({
-      data,
+      data: {
+        masjid: {
+          connect: { id: data.masjidId },
+        },
+        category: {
+          connect: { id: data.categoryId },
+        },
+        createdBy: {
+          connect: { id: data.created_by },
+        },
+        updatedBy: {
+          connect: { id: data.updated_by },
+        },
+      },
       include: {
         masjid: true,
         category: true,
