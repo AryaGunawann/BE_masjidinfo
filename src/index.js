@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 const cors = require("cors");
 require("dotenv").config();
 
@@ -17,13 +17,21 @@ const historyRoutes = require("./routes/historyRoutes");
 
 app.use(
   cors({
-    origin: "http://localhost:3001",
+    origin: [
+      "http://localhost:3001",
+      "https://masjidinfo-backend-aryagunawann-aryagunawanns-projects.vercel.app",
+    ],
     methods: "GET,POST,PUT,DELETE",
   })
 );
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.get("/", (req, res) => {
+  res.json({ message: "Masjid Info API" });
+});
 
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);

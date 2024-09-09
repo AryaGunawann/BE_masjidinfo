@@ -1,4 +1,4 @@
-const SejarahModel = require("../models/SejarahModel");
+const SejarahModel = require("../models/sejarahModel");
 
 class SejarahService {
   static async createSejarah(data, userId) {
