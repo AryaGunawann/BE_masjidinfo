@@ -17,7 +17,7 @@ const historyRoutes = require("./routes/historyRoutes");
 
 app.use(
   cors({
-    origin: "http://localhost:3001", // frontend origin
+    origin: "http://localhost:3001",
     methods: "GET,POST,PUT,DELETE",
   })
 );
