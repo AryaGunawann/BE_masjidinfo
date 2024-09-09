@@ -17,7 +17,7 @@ const historyRoutes = require("./routes/historyRoutes");
 
 app.use(
   cors({
-    origin: ["http://localhost:3001", "https://masjidinfo-backend.vercel.app"],
+    origin: "https://masjidinfo-backend.vercel.app",
     methods: "GET,POST,PUT,DELETE",
   })
 );
