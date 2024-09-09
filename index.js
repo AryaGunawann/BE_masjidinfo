@@ -4,16 +4,16 @@ const PORT = process.env.PORT || 3000;
 const cors = require("cors");
 require("dotenv").config();
 
-const userRoutes = require("./routes/userRoutes");
-const authRoutes = require("./routes/authRoutes");
-const masjidRoutes = require("./routes/masjidRoutes");
-const detailMasjidRoutes = require("./routes/detailMasjidRoutes");
-const photoRoutes = require("./routes/photoRoutes");
-const sejarahRoutes = require("./routes/sejarahRoutes");
-const categoryRoutes = require("./routes/categoryRoutes");
-const masjidCategoryRoutes = require("./routes/masjidCategoryRoutes");
-const discussionRoutes = require("./routes/discussionRoutes");
-const historyRoutes = require("./routes/historyRoutes");
+const userRoutes = require("./src/routes/userRoutes");
+const authRoutes = require("./src/routes/authRoutes");
+const masjidRoutes = require("./src/routes/masjidRoutes");
+const detailMasjidRoutes = require("./src/routes/detailMasjidRoutes");
+const photoRoutes = require("./src/routes/photoRoutes");
+const sejarahRoutes = require("./src/routes/sejarahRoutes");
+const categoryRoutes = require("./src/routes/categoryRoutes");
+const masjidCategoryRoutes = require("./src/routes/masjidCategoryRoutes");
+const discussionRoutes = require("./src/routes/discussionRoutes");
+const historyRoutes = require("./src/routes/historyRoutes");
 
 app.use(
   cors({
