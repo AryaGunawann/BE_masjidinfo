@@ -17,10 +17,7 @@ const historyRoutes = require("./routes/historyRoutes");
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:3001",
-      "https://masjidinfo-backend-aryagunawann-aryagunawanns-projects.vercel.app",
-    ],
+    origin: ["http://localhost:3001", "https://masjidinfo-backend.vercel.app/"],
     methods: "GET,POST,PUT,DELETE",
   })
 );
