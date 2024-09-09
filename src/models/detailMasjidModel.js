@@ -50,6 +50,13 @@ class DetailMasjidModel {
       where: { id },
     });
   }
+
+  static async incrementTotalKlik(id) {
+    return await prisma.detailMasjid.update({
+      where: { id },
+      data: { total_klik: { increment: 1 } },
+    });
+  }
 }
 
 module.exports = DetailMasjidModel;

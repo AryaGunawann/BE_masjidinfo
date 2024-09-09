@@ -14,6 +14,7 @@ class DetailMasjidService {
   }
 
   static async getDetailMasjidById(id) {
+    await DetailMasjidModel.incrementTotalKlik(id);
     return await DetailMasjidModel.findById(id);
   }
 

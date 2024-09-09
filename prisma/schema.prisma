@@ -67,7 +67,6 @@ model Masjid {
   name                      String              @db.VarChar(255)
   description               String?             @db.Text
   thumbnail                 String?             @db.Text
-  totalKliks                Int                 @default(0)
   created_by                String              @db.VarChar(255)
   updated_by                String              @db.VarChar(255)
   created_at                DateTime            @default(now()) @db.Timestamp(0)
@@ -86,7 +85,7 @@ model DetailMasjid {
   id_masjid                 String              @db.VarChar(255)
   name                      String              @db.VarChar(255)
   address                   String              @db.Text
-  totalKliks                Int                 @default(0)
+  total_klik                Int                 @default(0)
   created_by                String              @db.VarChar(255)
   updated_by                String              @db.VarChar(255)
   created_at                DateTime            @default(now()) @db.Timestamp(0)
@@ -104,7 +103,7 @@ model DetailMasjid {
 }
 
 model Sejarah {
-  id                        String              @id @default(uuid()) @db.VarChar(255)
+  id                        Int                 @id @default(autoincrement())
   title                     String              @db.VarChar(255)
   content                   String              @db.Text
   detailMasjidId            String?             @db.VarChar(255)
@@ -121,7 +120,7 @@ model Sejarah {
 }
 
 model Photo {
-  id                        String              @id @default(uuid()) @db.VarChar(255)
+  id                        Int                 @id @default(autoincrement())
   photo_url                 String              @db.Text
   caption                   String?             @db.Text
   detailMasjidId            String?             @db.VarChar(255)
@@ -138,8 +137,8 @@ model Photo {
 }
 
 model Category {
-  id                        String              @id @default(uuid()) @db.VarChar(255)
-  name                      String              @db.VarChar(255)
+  id                        Int                 @id @default(autoincrement())
+  name                      String              @unique @db.VarChar(255)
   created_by                String              @db.VarChar(255)
   updated_by                String              @db.VarChar(255)
   created_at                DateTime            @default(now()) @db.Timestamp(0)
@@ -153,15 +152,15 @@ model Category {
 }
 
 model MasjidCategory {
-  id                        String              @id @default(uuid()) @db.VarChar(255)
-  masjidId                  String              @db.VarChar(255)
-  id_category               String              @db.VarChar(255)
+  id                        Int                 @id @default(autoincrement())
+  id_masjid                 String              @db.VarChar(255)
+  id_category               Int                 @db.Int
   created_by                String              @db.VarChar(255)
   updated_by                String              @db.VarChar(255)
   created_at                DateTime            @default(now()) @db.Timestamp(0)
   updated_at                DateTime            @default(now()) @updatedAt @db.Timestamp(0)
 
-  masjid                    Masjid              @relation("MasjidCategories", fields: [masjidId], references: [id])
+  masjid                    Masjid              @relation("MasjidCategories", fields: [id_masjid], references: [id])
   category                  Category            @relation("CategoryMasjidCategories", fields: [id_category], references: [id])
   createdBy                 User                @relation("MasjidCategoryCreatedBy", fields: [created_by], references: [id])
   updatedBy                 User                @relation("MasjidCategoryUpdatedBy", fields: [updated_by], references: [id])
@@ -171,15 +170,13 @@ model MasjidCategory {
 
 model History {
   id                        String              @id @default(uuid()) @db.VarChar(255)
-  action                    String              @db.VarChar(255)
-  timestamp                 DateTime            @default(now())
-  masjidId                  String?             @db.VarChar(255)
-  detailMasjidId            String?             @db.VarChar(255)
-  userId                    String              @db.VarChar(255)
+  message                   String              @db.Text
+  id_user                   String              @db.VarChar(255)
+  id_detail_masjid          String              @db.VarChar(255)
+  created_at                DateTime            @default(now()) @db.Timestamp(0)
 
-  
-  detailMasjid              DetailMasjid?       @relation("DetailMasjidHistories", fields: [detailMasjidId], references: [id])
-  user                      User                @relation("HistoryUser", fields: [userId], references: [id])
+  user                      User                @relation("HistoryUser", fields: [id_user], references: [id])
+  detailMasjid              DetailMasjid        @relation("DetailMasjidHistories", fields: [id_detail_masjid], references: [id])
 
   @@map("tb_histories")
 }

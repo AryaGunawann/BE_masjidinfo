@@ -10,15 +10,15 @@ class PhotoModel {
   }
 
   static async findById(id) {
-    return await prisma.photo.findUnique({ where: { id } });
+    return await prisma.photo.findUnique({ where: { id: parseInt(id, 10) } });
   }
 
   static async update(id, data) {
-    return await prisma.photo.update({ where: { id }, data });
+    return await prisma.photo.update({ where: { id: parseInt(id, 10) }, data });
   }
 
   static async delete(id) {
-    return await prisma.photo.delete({ where: { id } });
+    return await prisma.photo.delete({ where: { id: parseInt(id, 10) } });
   }
 }
 

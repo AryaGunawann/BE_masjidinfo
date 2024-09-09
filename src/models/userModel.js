@@ -5,7 +5,7 @@ class UserModel {
     return await prisma.user.create({
       data: {
         ...data,
-        role: data.role || "USER", // Default to USER if no role is specified
+        role: data.role || "USER",
       },
     });
   }

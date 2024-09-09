@@ -10,15 +10,25 @@ class SejarahModel {
   }
 
   static async findById(id) {
-    return await prisma.sejarah.findUnique({ where: { id } });
+    // Konversi id ke Int sebelum digunakan
+    return await prisma.sejarah.findUnique({
+      where: { id: parseInt(id, 10) },
+    });
   }
 
   static async update(id, data) {
-    return await prisma.sejarah.update({ where: { id }, data });
+    // Konversi id ke Int sebelum digunakan
+    return await prisma.sejarah.update({
+      where: { id: parseInt(id, 10) },
+      data,
+    });
   }
 
   static async delete(id) {
-    return await prisma.sejarah.delete({ where: { id } });
+    // Konversi id ke Int sebelum digunakan
+    return await prisma.sejarah.delete({
+      where: { id: parseInt(id, 10) },
+    });
   }
 }
 

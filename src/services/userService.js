@@ -56,7 +56,7 @@ class UserService {
     if (!user) throw new Error("User not found");
 
     const token = crypto.randomBytes(20).toString("hex");
-    const expiration = new Date(Date.now() + 3600000); // 1 hour
+    const expiration = new Date(Date.now() + 3600000);
 
     await UserModel.updatePasswordResetToken(user.id, token, expiration);
 

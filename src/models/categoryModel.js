@@ -10,15 +10,20 @@ class CategoryModel {
   }
 
   static async findById(id) {
-    return await prisma.category.findUnique({ where: { id } });
+    return await prisma.category.findUnique({
+      where: { id: parseInt(id, 10) },
+    });
   }
 
   static async update(id, data) {
-    return await prisma.category.update({ where: { id }, data });
+    return await prisma.category.update({
+      where: { id: parseInt(id, 10) },
+      data,
+    });
   }
 
   static async delete(id) {
-    return await prisma.category.delete({ where: { id } });
+    return await prisma.category.delete({ where: { id: parseInt(id, 10) } });
   }
 }
 

@@ -9,14 +9,14 @@ router.get("/discussions/:id", DiscussionController.getById);
 router.post(
   "/discussions",
   authenticate,
-  authorize(["AUTHOR", "ADMIN"]),
+  authorize(["AUTHOR", "ADMIN", "USER"]),
   DiscussionController.create
 );
 
 router.put(
   "/discussions/:id",
   authenticate,
-  authorize(["AUTHOR", "ADMIN"]),
+  authorize(["AUTHOR", "ADMIN", "USER"]),
   DiscussionController.update
 );
 
