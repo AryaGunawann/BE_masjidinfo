@@ -8,7 +8,7 @@ const authenticate = async (req, res, next) => {
   if (!token) return res.status(401).json({ message: "No token provided" });
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_KEY);
     req.user = await prisma.user.findUnique({ where: { id: decoded.id } });
     if (!req.user) return res.status(401).json({ message: "Invalid token" });
     next();
@@ -31,7 +31,7 @@ const authenticateToken = (req, res, next) => {
 
   if (token == null) return res.sendStatus(401); // Tidak ada token ditemukan
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+  jwt.verify(token, process.env.JWT_KEY, (err, user) => {
     if (err) return res.sendStatus(403); // Token tidak valid
     req.user = user;
     next();
@@ -61,7 +61,7 @@ const authenticateUser = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_KEY);
     req.user = decoded;
     next();
   } catch (error) {
