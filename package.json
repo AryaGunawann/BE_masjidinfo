@@ -2,13 +2,11 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "index.js",
     "start": "node index.js",
-    "dev": "nodemon index.js",
-    "build": "prisma generate",
-    "postinstall": "prisma generate"
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
