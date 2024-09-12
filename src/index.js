@@ -21,6 +21,7 @@ app.use(
       "http://localhost:3000",
       "https://masjidinfo-backend.vercel.app",
       "https://masjidinfo.vercel.app",
+      "https://masjidinfo.my.id",
     ],
     methods: "GET,POST,PUT,DELETE",
   })
