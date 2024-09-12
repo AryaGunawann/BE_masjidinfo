@@ -2,6 +2,15 @@ const prisma = require("../config/dbConfig");
 
 class MasjidCategoryModel {
   static async create(data) {
+    if (
+      !data.masjidId ||
+      !data.categoryId ||
+      !data.created_by ||
+      !data.updated_by
+    ) {
+      throw new Error("Missing required fields");
+    }
+
     return await prisma.masjidCategory.create({
       data: {
         masjid: {

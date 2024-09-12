@@ -31,13 +31,16 @@ class MasjidCategoriesController {
         return res.status(403).json({ message: "Access denied" });
       }
 
-      const category = await MasjidCategoryService.createMasjidCategory(
-        {
-          masjidId: req.body.masjidId,
-          categoryId: req.body.categoryId,
-        },
-        userId
-      );
+      if (!req.body.masjidId || !req.body.categoryId) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+
+      const category = await MasjidCategoryService.createMasjidCategory({
+        masjidId: req.body.masjidId,
+        categoryId: req.body.categoryId,
+        created_by: userId,
+        updated_by: userId,
+      });
 
       res.status(201).json(category);
     } catch (error) {
