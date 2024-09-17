@@ -10,6 +10,10 @@ router.get(
   authorize(["AUTHOR", "ADMIN"]),
   UserController.getAllUsers
 );
+router.get("/me", authenticate, UserController.getCurrentUser);
+
+router.get("/public/:id", UserController.getPublicUserById);
+
 router.get(
   "/:id",
   authenticate,
@@ -25,7 +29,7 @@ router.put(
 router.delete(
   "/:id",
   authenticate,
-  authorize(["AUTHOR", "ADMIN"]),
+  authorize(["ADMIN"]),
   UserController.deleteUser
 );
 

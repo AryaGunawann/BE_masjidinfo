@@ -17,17 +17,17 @@ class DiscussionModel {
       include: {
         user: {
           select: {
-            name: true, // Only fetch the user's name
-            avatar: true, // Only fetch the user's avatar
+            name: true,
+            avatar: true,
           },
         },
         replies: {
           select: {
-            message: true, // Fetch replies' messages
+            message: true,
             user: {
               select: {
-                name: true, // Fetch the reply user's name
-                avatar: true, // Fetch the reply user's avatar
+                name: true,
+                avatar: true,
               },
             },
           },
@@ -42,17 +42,17 @@ class DiscussionModel {
       include: {
         user: {
           select: {
-            name: true, // Fetch user's name
-            avatar: true, // Fetch user's avatar
+            name: true,
+            avatar: true,
           },
         },
         replies: {
           select: {
-            message: true, // Fetch replies' messages
+            message: true,
             user: {
               select: {
-                name: true, // Fetch reply user's name
-                avatar: true, // Fetch reply user's avatar
+                name: true,
+                avatar: true,
               },
             },
           },

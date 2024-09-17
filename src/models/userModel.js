@@ -7,11 +7,35 @@ class UserModel {
         ...data,
         role: data.role || "USER",
       },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        avatar: true,
+        is_verified: true,
+        is_email_verification: true,
+        role: true,
+        created_at: true,
+        updated_at: true,
+      },
     });
   }
 
   static async findById(id) {
-    return await prisma.user.findUnique({ where: { id } });
+    return await prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        avatar: true,
+        is_verified: true,
+        is_email_verification: true,
+        role: true,
+        created_at: true,
+        updated_at: true,
+      },
+    });
   }
 
   static async findByEmail(email) {
@@ -81,7 +105,19 @@ class UserModel {
   }
 
   static async findAll() {
-    return await prisma.user.findMany();
+    return await prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        avatar: true,
+        is_verified: true,
+        is_email_verification: true,
+        role: true,
+        created_at: true,
+        updated_at: true,
+      },
+    });
   }
 }
 
