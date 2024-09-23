@@ -3,7 +3,7 @@ const DetailMasjidModel = require("../models/detailMasjidModel");
 class DetailMasjidService {
   static async createDetailMasjid(data, userId) {
     // Buat slug dari title
-    const slug = data.title
+    const slug = data.name
       .toLowerCase()
       .replace(/\s+/g, "-")
       .replace(/[^\w\-]+/g, "");
