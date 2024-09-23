@@ -4,8 +4,8 @@ const DetailMasjidController = require("../controllers/detailMasjidController");
 const router = express.Router();
 
 router.get("/detailmasjids", DetailMasjidController.getAll);
+router.get("/detailmasjids/slug/:slug", DetailMasjidController.getBySlug);
 router.get("/detailmasjids/:id", DetailMasjidController.getById);
-router.get("/detailmasjids/name/:name", DetailMasjidController.getByName);
 
 router.post(
   "/detailmasjids",

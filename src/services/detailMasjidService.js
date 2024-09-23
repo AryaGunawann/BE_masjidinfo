@@ -2,8 +2,15 @@ const DetailMasjidModel = require("../models/detailMasjidModel");
 
 class DetailMasjidService {
   static async createDetailMasjid(data, userId) {
+    // Buat slug dari title
+    const slug = data.title
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w\-]+/g, "");
+
     return await DetailMasjidModel.create({
       ...data,
+      slug, // Menyertakan slug di data yang akan disimpan
       created_by: userId,
       updated_by: userId,
     });
@@ -26,8 +33,8 @@ class DetailMasjidService {
     return await DetailMasjidModel.delete(id);
   }
 
-  static async getDetailMasjidByName(name) {
-    return await DetailMasjidModel.findByName(name);
+  static async getDetailMasjidBySlug(slug) {
+    return await DetailMasjidModel.findBySlug(slug);
   }
 }
 

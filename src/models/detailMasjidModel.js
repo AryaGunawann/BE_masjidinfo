@@ -33,6 +33,17 @@ class DetailMasjidModel {
     });
   }
 
+  static async findBySlug(slug) {
+    return await prisma.detailMasjid.findUnique({
+      where: { slug },
+      include: {
+        photos: true,
+        sejarah: true,
+        discussions: true,
+      },
+    });
+  }
+
   static async update(id, data) {
     return await prisma.detailMasjid.update({
       where: { id },
@@ -48,21 +59,6 @@ class DetailMasjidModel {
   static async delete(id) {
     return await prisma.detailMasjid.delete({
       where: { id },
-    });
-  }
-
-  static async findByName(name) {
-    return await prisma.detailMasjid.findMany({
-      where: {
-        name: {
-          contains: name, // Hanya gunakan contains tanpa mode
-        },
-      },
-      include: {
-        photos: true,
-        sejarah: true,
-        discussions: true,
-      },
     });
   }
 

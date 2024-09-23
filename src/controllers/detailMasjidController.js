@@ -1,7 +1,6 @@
 const DetailMasjidService = require("../services/detailMasjidService");
 
 class DetailMasjidController {
-  // Semua pengguna dapat melihat semua detail masjid
   static async getAll(req, res) {
     try {
       const detailMasjids = await DetailMasjidService.getAllDetailMasjids();
@@ -11,7 +10,6 @@ class DetailMasjidController {
     }
   }
 
-  // Semua pengguna dapat melihat detail masjid berdasarkan ID
   static async getById(req, res) {
     try {
       const detailMasjid = await DetailMasjidService.getDetailMasjidById(
@@ -26,21 +24,6 @@ class DetailMasjidController {
     }
   }
 
-  static async getByName(req, res) {
-    try {
-      const detailMasjids = await DetailMasjidService.getDetailMasjidByName(
-        req.params.name
-      );
-      if (!detailMasjids || detailMasjids.length === 0) {
-        return res.status(404).json({ message: "DetailMasjid not found" });
-      }
-      res.status(200).json(detailMasjids);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
-
-  // Author atau admin dapat membuat detail masjid baru
   static async create(req, res) {
     try {
       if (req.user.role !== "AUTHOR" && req.user.role !== "ADMIN") {
@@ -58,7 +41,20 @@ class DetailMasjidController {
     }
   }
 
-  // Author hanya dapat mengedit detail masjid yang mereka buat, admin dapat mengedit detail masjid apa pun
+  static async getBySlug(req, res) {
+    try {
+      const detailMasjid = await DetailMasjidService.getDetailMasjidBySlug(
+        req.params.slug
+      );
+      if (!detailMasjid) {
+        return res.status(404).json({ message: "DetailMasjid not found" });
+      }
+      res.status(200).json(detailMasjid);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
   static async update(req, res) {
     try {
       const user = req.user;
@@ -69,7 +65,7 @@ class DetailMasjidController {
         return res.status(404).json({ message: "DetailMasjid not found" });
       }
 
-      if (user.role === "AUTHOR" && detailMasjid.authorId !== user.id) {
+      if (user.role === "AUTHOR" && detailMasjid.created_by !== user.id) {
         return res.status(403).json({ message: "Access denied" });
       }
 
@@ -83,7 +79,6 @@ class DetailMasjidController {
     }
   }
 
-  // Author hanya dapat menghapus detail masjid yang mereka buat, admin dapat menghapus detail masjid apa pun
   static async delete(req, res) {
     try {
       const user = req.user;
@@ -94,7 +89,7 @@ class DetailMasjidController {
         return res.status(404).json({ message: "DetailMasjid not found" });
       }
 
-      if (user.role === "AUTHOR" && detailMasjid.authorId !== user.id) {
+      if (user.role === "AUTHOR" && detailMasjid.created_by !== user.id) {
         return res.status(403).json({ message: "Access denied" });
       }
 
