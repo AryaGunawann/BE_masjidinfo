@@ -26,6 +26,20 @@ class DetailMasjidController {
     }
   }
 
+  static async getByName(req, res) {
+    try {
+      const detailMasjids = await DetailMasjidService.getDetailMasjidByName(
+        req.params.name
+      );
+      if (!detailMasjids || detailMasjids.length === 0) {
+        return res.status(404).json({ message: "DetailMasjid not found" });
+      }
+      res.status(200).json(detailMasjids);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
   // Author atau admin dapat membuat detail masjid baru
   static async create(req, res) {
     try {

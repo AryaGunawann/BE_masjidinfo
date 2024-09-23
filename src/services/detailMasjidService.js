@@ -25,6 +25,10 @@ class DetailMasjidService {
   static async deleteDetailMasjid(id) {
     return await DetailMasjidModel.delete(id);
   }
+
+  static async getDetailMasjidByName(name) {
+    return await DetailMasjidModel.findByName(name);
+  }
 }
 
 module.exports = DetailMasjidService;
