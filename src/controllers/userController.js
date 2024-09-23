@@ -34,14 +34,12 @@ class UserController {
     }
   }
 
-  // Mendapatkan data publik user (tanpa role protection)
   static async getPublicUserById(req, res) {
     try {
       const user = await UserService.getUserById(req.params.id);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      // Hanya kirimkan data publik (name, avatar)
       const publicData = {
         name: user.name,
         avatar: user.avatar,
@@ -87,6 +85,50 @@ class UserController {
       res.status(200).json(user);
     } catch (error) {
       res.status(500).json({ error: error.message });
+    }
+  }
+
+  static async verifyOTP(req, res) {
+    const { userId, otp } = req.body;
+    try {
+      const user = await UserService.verifyOTP(userId, otp);
+      res.status(200).json({ message: "OTP verification successful", user });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
+
+  static async regenerateOTP(req, res) {
+    const { userId } = req.body;
+    try {
+      const result = await UserService.regenerateOTP(userId);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
+
+  static async requestPasswordReset(req, res) {
+    const { email } = req.body;
+    try {
+      const result = await UserService.requestPasswordReset(email);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
+
+  static async resetPasswordWithOTP(req, res) {
+    const { email, otp, newPassword } = req.body;
+    try {
+      const result = await UserService.resetPasswordWithOTP(
+        email,
+        otp,
+        newPassword
+      );
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
     }
   }
 }

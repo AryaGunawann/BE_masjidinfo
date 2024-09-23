@@ -34,6 +34,8 @@ class UserModel {
         role: true,
         created_at: true,
         updated_at: true,
+        otp_hash: true,
+        otp_expiration: true,
       },
     });
   }
@@ -46,30 +48,24 @@ class UserModel {
     return await prisma.user.update({ where: { id }, data });
   }
 
-  static async delete(id) {
-    return await prisma.user.delete({ where: { id } });
-  }
-
-  static async updateVerificationToken(id, token) {
+  static async updateOTP(id, otpHash, otpExpiration) {
     return await prisma.user.update({
       where: { id },
       data: {
-        reset_password_token: token,
-        is_email_verification: false,
+        otp_hash: otpHash,
+        otp_expiration: otpExpiration,
+        otp_attempts: 0,
+        otp_last_attempt: null,
       },
     });
   }
 
-  static async verifyUser(token) {
-    return await prisma.user.updateMany({
-      where: {
-        reset_password_token: token,
-        is_verified: false,
-      },
+  static async incrementOTPAttempts(id) {
+    return await prisma.user.update({
+      where: { id },
       data: {
-        is_verified: true,
-        is_email_verification: true,
-        reset_password_token: null,
+        otp_attempts: { increment: 1 },
+        otp_last_attempt: new Date(),
       },
     });
   }
@@ -93,17 +89,6 @@ class UserModel {
     });
   }
 
-  static async updatePassword(id, newPassword) {
-    return await prisma.user.update({
-      where: { id },
-      data: {
-        password: newPassword,
-        reset_password_token: null,
-        reset_password_expiration: null,
-      },
-    });
-  }
-
   static async findAll() {
     return await prisma.user.findMany({
       select: {
@@ -116,6 +101,24 @@ class UserModel {
         role: true,
         created_at: true,
         updated_at: true,
+      },
+    });
+  }
+
+  static async delete(id) {
+    return await prisma.user.delete({ where: { id } });
+  }
+
+  static async verifyUser(token) {
+    return await prisma.user.updateMany({
+      where: {
+        reset_password_token: token,
+        reset_password_expiration: { gte: new Date() },
+      },
+      data: {
+        is_email_verification: true,
+        reset_password_token: null,
+        reset_password_expiration: null,
       },
     });
   }

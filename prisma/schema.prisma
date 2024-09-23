@@ -21,6 +21,10 @@ model User {
   avatar                    String?         @db.VarChar(255)
   is_verified               Boolean         @default(false)
   is_email_verification     Boolean         @default(false)
+  otp_hash                  String?         @db.Text
+  otp_expiration            DateTime?       
+  otp_attempts              Int             @default(0)
+  otp_last_attempt          DateTime?
   role                      Role            @default(USER)
   reset_password_token      String?         @db.VarChar(255)
   reset_password_expiration DateTime?
