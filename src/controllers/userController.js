@@ -89,9 +89,9 @@ class UserController {
   }
 
   static async verifyOTP(req, res) {
-    const { userId, otp } = req.body;
+    const { email, otp } = req.body;
     try {
-      const user = await UserService.verifyOTP(userId, otp);
+      const user = await UserService.verifyOTP(email, otp);
       res.status(200).json({ message: "OTP verification successful", user });
     } catch (error) {
       res.status(400).json({ error: error.message });
@@ -99,9 +99,9 @@ class UserController {
   }
 
   static async regenerateOTP(req, res) {
-    const { userId } = req.body;
+    const { email } = req.body;
     try {
-      const result = await UserService.regenerateOTP(userId);
+      const result = await UserService.regenerateOTP(email);
       res.status(200).json(result);
     } catch (error) {
       res.status(400).json({ error: error.message });

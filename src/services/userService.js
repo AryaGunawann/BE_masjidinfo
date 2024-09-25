@@ -59,8 +59,8 @@ class UserService {
     return user;
   }
 
-  static async verifyOTP(userId, otp) {
-    const user = await UserModel.findById(userId);
+  static async verifyOTP(email, otp) {
+    const user = await UserModel.findByEmail(email);
     if (!user) {
       console.log("Pengguna tidak ditemukan");
       throw new Error("Pengguna tidak ditemukan");
@@ -75,7 +75,6 @@ class UserService {
       throw new Error("OTP tidak valid atau telah kedaluwarsa");
     }
 
-    // Cek jumlah percobaan maksimum
     if (
       user.otp_attempts >= 3 &&
       user.otp_last_attempt > new Date(Date.now() - 30 * 60 * 1000)
@@ -108,8 +107,8 @@ class UserService {
     return user;
   }
 
-  static async regenerateOTP(userId) {
-    const user = await UserModel.findById(userId);
+  static async regenerateOTP(email) {
+    const user = await UserModel.findByEmail(email);
     if (!user) {
       throw new Error("User not found");
     }
@@ -119,7 +118,6 @@ class UserService {
     const otpHash = await bcrypt.hash(otp, 10);
 
     await UserModel.updateOTP(user.id, otpHash, otpExpiration);
-
     await this.sendOTPByEmail(user.email, otp);
 
     return { message: "New OTP has been sent to your email" };
