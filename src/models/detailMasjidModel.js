@@ -62,9 +62,16 @@ class DetailMasjidModel {
     });
   }
 
-  static async incrementTotalKlik(id) {
+  static async incrementTotalKlik(slug) {
+    console.log(`Incrementing total klik for slug: ${slug}`);
+    const detailMasjid = await prisma.detailMasjid.findUnique({
+      where: { slug },
+    });
+    if (!detailMasjid) {
+      throw new Error(`DetailMasjid with slug '${slug}' not found.`);
+    }
     return await prisma.detailMasjid.update({
-      where: { id },
+      where: { slug },
       data: { total_klik: { increment: 1 } },
     });
   }

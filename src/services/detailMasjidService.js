@@ -20,9 +20,13 @@ class DetailMasjidService {
     return await DetailMasjidModel.findAll();
   }
 
-  static async getDetailMasjidById(id) {
-    await DetailMasjidModel.incrementTotalKlik(id);
-    return await DetailMasjidModel.findById(id);
+  static async getDetailMasjidBySlug(slug) {
+    return await DetailMasjidModel.findBySlug(slug);
+  }
+
+  static async getDetailMasjidBySlug(slug) {
+    await DetailMasjidModel.incrementTotalKlik(slug);
+    return await DetailMasjidModel.findBySlug(slug);
   }
 
   static async updateDetailMasjid(id, data) {
@@ -31,10 +35,6 @@ class DetailMasjidService {
 
   static async deleteDetailMasjid(id) {
     return await DetailMasjidModel.delete(id);
-  }
-
-  static async getDetailMasjidBySlug(slug) {
-    return await DetailMasjidModel.findBySlug(slug);
   }
 }
 
